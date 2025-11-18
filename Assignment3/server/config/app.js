@@ -3,10 +3,18 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+require('dotenv').config();
+let mongoose = require('mongoose');
+let DB = require('./db');
 var indexRouter = require('../routes/index');
 var usersRouter = require('../routes/users');
-
+let assignmentsRouter = require('../routes/assignment');
+mongoose.connect(DB.URI);
+let mongoDB = mongoose.connection;
+mongoDB.on('error',console.error.bind(console,'Connection error'));
+mongoDB.once('open',()=>{
+  console.log('Connected to the MongoDB');
+})
 var app = express();
 
 // view engine setup
@@ -22,7 +30,7 @@ app.use(express.static(path.join(__dirname, '../../node_modules')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+app.use('/assignments',assignmentsRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
