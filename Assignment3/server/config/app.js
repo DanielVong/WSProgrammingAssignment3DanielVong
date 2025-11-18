@@ -9,14 +9,14 @@ let DB = require('./db');
 var indexRouter = require('../routes/index');
 var usersRouter = require('../routes/users');
 let assignmentsRouter = require('../routes/assignment');
+var app = express();
+
 mongoose.connect(DB.URI);
 let mongoDB = mongoose.connection;
 mongoDB.on('error',console.error.bind(console,'Connection error'));
 mongoDB.once('open',()=>{
   console.log('Connected to the MongoDB');
 })
-var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');

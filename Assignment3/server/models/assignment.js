@@ -3,10 +3,10 @@ let mongoose = require("mongoose")
 //CREATE A MODEL
 let assignmentModel = mongoose.Schema(
     {
+        course:String,
         name:String, 
-        deadline:String,
         weight:Number,
-        complete:Boolean
+        due:String
     },
     {
         collection: "assignments"
