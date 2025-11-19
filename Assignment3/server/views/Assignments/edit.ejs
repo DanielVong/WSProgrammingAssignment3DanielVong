@@ -1,4 +1,6 @@
 <%- include ../partials/header.ejs %>
+<!--Table with form elements to edit an existing object-->
+<!--value element makes the existing info on the object appear in the textbox for easy access-->
 <div class="container">
     <div class="row">
         <div class="offset-md-3 col-md-6">
@@ -11,6 +13,7 @@
                     id="courseTextField"
                     placeholder="Enter the Course name"
                     name="course" 
+                    
                     value="<%= Assignment.course%>"
                     required>
                 </div>
