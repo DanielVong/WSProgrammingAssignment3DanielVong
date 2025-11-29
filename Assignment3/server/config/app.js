@@ -41,6 +41,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Google OAuth Strategy
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(new GoogleStrategy({
@@ -48,25 +49,58 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK
   },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
+  async function(accessToken, refreshToken, profile, cb) {
+    try {
+      // Check if user already exists
+      let user = await User.findOne({ googleId: profile.id });
+      
+      if (!user) {
+        // Create new user if doesn't exist
+        user = await User.create({
+          googleId: profile.id,
+          displayName: profile.displayName,
+          email: profile.emails?.[0]?.value || '',
+          username: profile.emails?.[0]?.value || `google_${profile.id}`
+        });
+      }
+      
+      return cb(null, user);
+    } catch (err) {
+      return cb(err, null);
+    }
   }
 ));
 
+// GitHub OAuth Strategy
 var GitHubStrategy = require('passport-github2').Strategy;
+
 passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: process.env.GITHUB_CALLBACK
   },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ githubId: profile.id }, function (err, user) {
-      return done(err, user);
-    });
+  async function(accessToken, refreshToken, profile, done) {
+    try {
+      // Check if user already exists
+      let user = await User.findOne({ githubId: profile.id });
+      
+      if (!user) {
+        // Create new user if doesn't exist
+        user = await User.create({
+          githubId: profile.id,
+          displayName: profile.displayName || profile.username,
+          email: profile.emails?.[0]?.value || '',
+          username: profile.username || `github_${profile.id}`
+        });
+      }
+      
+      return done(null, user);
+    } catch (err) {
+      return done(err, null);
+    }
   }
 ));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, '../views'));
