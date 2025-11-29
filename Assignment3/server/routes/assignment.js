@@ -12,7 +12,8 @@ router.get('/',async(req,res,next)=>{
         const AssignmentList = await Assignment.find();
         res.render('Assignments/list',{
             title:'Assignments',
-            AssignmentList:AssignmentList
+            AssignmentList:AssignmentList, 
+            displayName: req.user?req.user.displayName:""
         })
     }
     catch(err)
@@ -29,7 +30,8 @@ router.get('/add',async(req,res,next)=>{
  try
     {
         res.render('Assignments/add',{
-            title:'Add Assignment'
+            title:'Add Assignment',
+            displayName: req.user?req.user.displayName:""
         })
     }
     catch(err)
@@ -71,7 +73,8 @@ router.get('/edit/:id',async(req,res,next)=>{
             res.render("Assignments/edit",
                 {
                     title:'Edit Assignment',
-                    Assignment: assignmentToEdit
+                    Assignment: assignmentToEdit,
+                    displayName: req.user?req.user.displayName:""
                 }
             )
     }

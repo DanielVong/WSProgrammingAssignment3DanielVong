@@ -6,11 +6,14 @@
     <div class="row">
         <div class="offset-md-1 col-md-10">
             <h1><%= title %></h1>
+            <% if(typeof displayName=='string' && displayName) { %>
             <a href="/assignments/add" class="btn btn-primary" role="button">
                 <i class="fas fa-plus-circle"></i> Add an Assignment
             </a>
+            <% } %>
             <br>
             <table class ="table table-bordered table-striped-columns table-hover ">
+            <% if(typeof displayName=='string' && displayName) { %>
                 <!--Header row-->
                 <tr class = "d-flex">
                     <th class="text-center col-4">Course</th>
@@ -37,6 +40,24 @@
                         <i class="fas fa-trash-alt"></i>Delete</a>
                     </td>
                 </tr>
+                <% } %>
+                <% } else { %>
+                    <!--Header row-->
+                <tr class = "d-flex">
+                    <th class="text-center col-4">Course</th>
+                    <th class="text-center col-2">Name</th>
+                    <th class="text-center col-2">Weight</th>
+                    <th class="text-center col-2">Due Date</th>
+                </tr>
+                <!--For/while loop-->
+                <% for(let count = 0; count<AssignmentList.length;count++){%>
+                <tr class="d-flex">
+                    <td class="text-center col-4"><%= AssignmentList[count].course %></td>
+                    <td class="text-center col-2"><%= AssignmentList[count].name %></td>
+                    <td class="text-center col-2"><%= AssignmentList[count].weight %>%</td>
+                    <td class="text-center col-2"><%= AssignmentList[count].due %></td>
+                </tr>
+                <% } %>
                 <% } %>
             </table>
         </div>
